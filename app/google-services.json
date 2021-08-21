@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "6673839912",
+    "project_id": "crimereporting-14bd1",
+    "storage_bucket": "crimereporting-14bd1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:6673839912:android:f182f6f47c3186b05fc21d",
+        "android_client_info": {
+          "package_name": "com.example.crimeandmissingpersonreporting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "6673839912-ajpuq9etn988vgfup9rul8c096pkkmu6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKXeD-HBwGye-O-7B3fzvenqKJyIAdC3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "6673839912-ajpuq9etn988vgfup9rul8c096pkkmu6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

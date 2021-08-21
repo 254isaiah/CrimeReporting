@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Crime and Missing Person Reporting</string>
+    <string name="no_account_yet">No account yet? <font fgcolor='#3498DB'><u>Create one</u></font></string>
+    <string name="already_have_an_account">Already have an account? <font fgcolor='#3498DB'><u>Login</u></font></string>
+    <string name="full_names">Full names required, must be letters only.</string>
+    <string name="email_address">Email address required, must have the correct format.</string>
+    <string name="err_password_confirmation">The passwords do not match.</string>
+    <string name="err_email_confirmation">The emails do not match.</string>
+    <string name="password_required">Password Required</string>
+    <string name="passwd_required">Password required</string>
+</resources>

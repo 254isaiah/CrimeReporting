@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menuProfile"
+        android:title="My Profile"
+        android:orderInCategory="0"
+        android:icon="@drawable/user"
+        />
+
+    <item
+        android:id="@+id/menuViewMPerson"
+        android:title="View Missing Person"
+        android:orderInCategory="1"
+        android:icon="@drawable/missing"/>
+    <item
+        android:id="@+id/menuReportComplaint"
+        android:title="Report Complaint"
+        android:orderInCategory="2"
+        android:icon="@drawable/reports"/>
+    <item
+        android:id="@+id/menuHistory"
+        android:title="History"
+        android:orderInCategory="3"
+        android:icon="@drawable/history"/>
+    <item
+        android:id="@+id/menuLogout"
+        android:title="Logout"
+        android:icon="@drawable/logout"
+        android:orderInCategory="4"/>
+
+</menu>
