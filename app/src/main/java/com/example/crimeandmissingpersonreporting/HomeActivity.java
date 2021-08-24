@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toolbar;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,7 +42,9 @@ public class HomeActivity extends AppCompatActivity {
         navigationView.setItemIconTintList(null);
 
         mAuth = FirebaseAuth.getInstance();
+
     }
+
 
     @Override
     protected void onStart() {
@@ -96,6 +99,18 @@ public class HomeActivity extends AppCompatActivity {
 
             case R.id.menuProfile:
                 startActivity(new Intent(HomeActivity.this, MyProfileActivity.class));
+                break;
+
+            case R.id.menuViewMPerson:
+                startActivity(new Intent(HomeActivity.this, MissingActivity.class));
+                break;
+
+            case R.id.menuReportComplaint:
+                startActivity(new Intent(HomeActivity.this, ComplaintsActivity.class));
+                break;
+
+            case R.id.menuHistory:
+                //startActivity(new Intent(HomeActivity.this, HistoryActivity.class));
                 break;
 
         }
