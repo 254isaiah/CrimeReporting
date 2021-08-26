@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         if (v == btnMissingP)
         {
-            startActivity(new Intent(this, MissingPersonActivity.class));
+            startActivity(new Intent(this, showPeopleActivity.class));
         }
         if (v==btnRegister)
         {

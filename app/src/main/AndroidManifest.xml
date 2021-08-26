@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.crimeandmissingpersonreporting">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,7 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CrimeAndMissingPersonReporting">
-        <activity android:name=".MyProfileActivity"></activity>
+        <activity android:name=".showPeopleActivity"></activity>
+        <activity android:name=".MissingActivity" />
+        <activity android:name=".ComplaintsActivity" />
+        <activity android:name=".PersonsListActivity" />
+        <activity android:name=".UploadPersonActivity" />
+        <activity android:name=".ForgotPassword" />
+        <activity android:name=".MyProfileActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MissingPersonActivity" />
         <activity android:name=".LoginActivity" />

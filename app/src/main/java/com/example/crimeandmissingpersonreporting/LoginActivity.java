@@ -3,6 +3,7 @@ package com.example.crimeandmissingpersonreporting;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -59,13 +60,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.forgotPassword:
-                //startActivity(new Intent(this, ForgotPassword.class));
-                //break;
+                startActivity(new Intent(this, ForgotPassword.class));
+                break;
         }
 
     }
 
     private void userLogin() {
+        Context context = LoginActivity.this;
+        if (!NetworkState.checkConnection(context)) {
+            NetworkState.ifNoInternetConnection(context);
+            return;
+        }
         //convert to string
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();

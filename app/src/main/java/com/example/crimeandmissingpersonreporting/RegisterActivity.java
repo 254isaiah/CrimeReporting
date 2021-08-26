@@ -3,6 +3,7 @@ package com.example.crimeandmissingpersonreporting;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -67,6 +68,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void createUser(){
+        Context context = RegisterActivity.this;
+        if (!NetworkState.checkConnection(context)) {
+            NetworkState.ifNoInternetConnection(context);
+            return;
+        }
         String emailAddress = email.getText().toString().trim();
         String names = fullname.getText().toString().trim();
         String phone = editTextPhone.getText().toString().trim();

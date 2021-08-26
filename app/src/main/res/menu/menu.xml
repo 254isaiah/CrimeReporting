@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/menuViewMPerson"
-        android:title="View Missing Person"
+        android:title="Missing Person"
         android:orderInCategory="1"
         android:icon="@drawable/missing"/>
     <item

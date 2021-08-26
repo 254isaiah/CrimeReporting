@@ -8,4 +8,12 @@
     <string name="err_email_confirmation">The emails do not match.</string>
     <string name="password_required">Password Required</string>
     <string name="passwd_required">Password required</string>
+    <string name="open">Open</string>
+    <string name="close">\Close</string>
+    <string name="person_name">Name required.</string>
+    <string name="person_age">Age required.</string>
+    <string name="residence">Age required.</string>
+    <string name="contact">Contact required.</string>
+    <string name="birthCert">Valid Birth Certificate number required.</string>
+
 </resources>
