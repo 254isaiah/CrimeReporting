@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +32,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
+
+import static android.content.ContentValues.TAG;
 
 public class HomeActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -79,6 +82,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User userProfile = snapshot.getValue(User.class);
                 if (userProfile != null) {
+                    //Log.d(TAG, "onDataChange: userProfile" +userProfile);
                     String fullName = userProfile.fullName;
 
                     toolbar.setTitle("Hi "+fullName);
@@ -149,11 +153,11 @@ public class HomeActivity extends AppCompatActivity {
                         break;
 
                     case R.id.menuReportComplaint:
-                        startActivity(new Intent(HomeActivity.this, ComplaintsActivity.class));
+                        startActivity(new Intent(HomeActivity.this, ReportCrime.class));
                         break;
 
                     case R.id.menuHistory:
-                        //startActivity(new Intent(HomeActivity.this, HistoryActivity.class));
+                        startActivity(new Intent(HomeActivity.this, HistoryActivity.class));
                         break;
 
 

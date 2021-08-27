@@ -1,6 +1,5 @@
 package com.example.crimeandmissingpersonreporting;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,42 +14,36 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> implements Filterable {
+public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ComplainViewHolder> implements Filterable {
 
-    private ArrayList<PersonModal> mList;
-    ArrayList<PersonModal> mListFull;
+    private ArrayList<ComplainModel> mList;
+    ArrayList<ComplainModel> mListFull;
     private Context context;
 
-
-    public MyAdapter(Context context , ArrayList<PersonModal> mList){
+    public ComplainAdapter(Context context , ArrayList<ComplainModel> mList){
         this.context = context;
         this.mListFull = mList;
         this.mList = new ArrayList<>(mListFull);
     }
+
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.item , parent ,false);
-        return new MyViewHolder(v);
+    public ComplainAdapter.ComplainViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.row_reports , parent ,false);
+        return new ComplainViewHolder(v);
+
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ComplainAdapter.ComplainViewHolder holder, int position) {
         Glide.with(context).load(mList.get(position).getImageUrl()).into(holder.imageView);
 
         holder.nameTextView.setText("Full Name: "+mList.get(position).getNames());
         holder.dateTextView.setText("Date: "+mList.get(position).getDate());
-        holder.ageTextView.setText("Age: "+mList.get(position).getAge());
-        holder.genderTextView.setText("Gender: "+mList.get(position).getGender());
-        holder.descriptionTextView.setText("Description: "+mList.get(position).getDescription());
+        holder.complainTextView.setText("Complain: "+mList.get(position).getComplain());
         holder.residenceTextView.setText("Residence: "+mList.get(position).getResidence());
-        holder.contactTextView.setText("Contact: "+mList.get(position).getContact());
 
     }
 
@@ -68,7 +61,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 
-            ArrayList<PersonModal> filteredList = new ArrayList<>();
+            ArrayList<ComplainModel> filteredList = new ArrayList<>();
 
             if (constraint == null || constraint.length() == 0){
 
@@ -78,10 +71,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
 
                 String filterPattern = constraint.toString().toLowerCase().trim();
 
-                for (PersonModal personModal : mListFull){
+                for (ComplainModel complainModel : mListFull){
 
-                    if (personModal.getNames().toLowerCase().contains(filterPattern) || personModal.getResidence().toLowerCase().contains(filterPattern))
-                        filteredList.add(personModal);
+                    if (complainModel.getNames().toLowerCase().contains(filterPattern) || complainModel.getResidence().toLowerCase().contains(filterPattern)
+                        || complainModel.getComplain().toLowerCase().contains(filterPattern))
+                        filteredList.add(complainModel);
                 }
             }
 
@@ -100,29 +94,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
         }
     };
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class ComplainViewHolder extends RecyclerView.ViewHolder{
 
         ImageView imageView;
         //added
-        TextView nameTextView,dateTextView,ageTextView,genderTextView,descriptionTextView,residenceTextView,contactTextView;
-        public MyViewHolder(@NonNull View itemView) {
+        TextView nameTextView,dateTextView,complainTextView,residenceTextView;
+        public ComplainViewHolder(@NonNull View itemView) {
             super(itemView);
 
             imageView = itemView.findViewById(R.id.m_image);
             //added
             nameTextView = itemView.findViewById(R.id.nameTextView);
             dateTextView = itemView.findViewById(R.id.dateTextView);
-            ageTextView = itemView.findViewById(R.id.ageTextView);
-            genderTextView = itemView.findViewById(R.id.genderTextView);
-            descriptionTextView = itemView.findViewById(R.id.descriptionTextView);
+            complainTextView = itemView.findViewById(R.id.complainTextView);
             residenceTextView = itemView.findViewById(R.id.residenceTextView);
-            contactTextView = itemView.findViewById(R.id.contactTextView);
+
         }
-    }
-    private String getDateToday(){
-        DateFormat dateFormat=new SimpleDateFormat("yyyy/MM/dd");
-        Date date=new Date();
-        String today= dateFormat.format(date);
-        return today;
     }
 }

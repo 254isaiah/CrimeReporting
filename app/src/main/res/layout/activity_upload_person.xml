@@ -33,14 +33,41 @@
                 android:textStyle="bold"
                 android:text="Enter Missing Person Details"
                 android:textSize="20dp"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
             <EditText
                 android:id="@+id/nameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:inputType="text"
-                android:hint="Name"
+                android:hint="Full Name"
                 android:layout_marginLeft="16dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+
+                <EditText
+                    android:id="@+id/idEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:inputType="number"
+                    android:hint="Enter ID Number"
+                    android:layout_marginLeft="16dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
 
             <EditText
                 android:id="@+id/ageEditText"
@@ -50,6 +77,12 @@
                 android:inputType="number"
                 android:hint="Age"
                 android:layout_marginLeft="16dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
             <EditText
                 android:id="@+id/genderEditText"
                 android:layout_width="match_parent"
@@ -58,16 +91,28 @@
                 android:inputType="text"
                 android:hint="Gender"
                 android:layout_marginLeft="16dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
 
             <EditText
-                android:id="@+id/descriptionEditText"
+                android:id="@+id/complainEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:minLines="3"
                 android:inputType="text"
-                android:hint="Description"
+                android:hint="Complain"
                 android:layout_marginLeft="16dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
 
             <EditText
                 android:id="@+id/residenceEditText"
@@ -77,6 +122,12 @@
                 android:inputType="text"
                 android:hint="Residence"
                 android:layout_marginLeft="16dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
 
             <EditText
                 android:id="@+id/contactEditText"
@@ -85,6 +136,7 @@
                 android:layout_marginStart="16dp"
                 android:hint="Contact"
                 android:layout_marginLeft="16dp"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
 
             <LinearLayout

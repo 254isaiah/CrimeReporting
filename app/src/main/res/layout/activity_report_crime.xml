@@ -29,29 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            tools:context=".MissingActivity">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="280dp"
-                android:src="@drawable/images_placehold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:text="Tap to upload an image"
-                android:textColor="#ADD8E6"/>
-
-            </RelativeLayout>
+            tools:context=".ReportCrime">
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -74,12 +52,12 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp">
                 <EditText
-                    android:id="@+id/birthEditText"
+                    android:id="@+id/idEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:hint="Birth Certificate number"
+                    android:hint="Enter ID Number"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -115,21 +93,7 @@
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp">
 
-                <EditText
-                    android:id="@+id/descriptionEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:hint="Description"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -161,36 +125,52 @@
                     android:hint="Contact"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+
+                <EditText
+                    android:id="@+id/complainEditText"
+                    android:layout_width="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_height="150dp"
+                    android:inputType="text|textMultiLine"
+                    android:gravity="top"
+                    android:hint="Complain"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <Button
+                android:id="@+id/button_choose_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textColor="@color/white"
+                android:text="Choose Image" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/images_placehold" />
 
         </LinearLayout>
 
 
     </ScrollView>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/reportBtn"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/uploadBtn"
-            android:layout_width="140sp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_marginLeft="20sp"
-            android:drawableLeft="@drawable/ic_baseline_person_add_24"
-            android:text="Add" />
-
-        <Button
-            android:id="@+id/showAll"
-            android:layout_width="140sp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginLeft="50sp"
-            android:drawableLeft="@drawable/ic_baseline_preview_24"
-            android:text="View" />
-
-    </LinearLayout>
+        android:layout_marginStart="16dp"
+        android:layout_gravity="center"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:text="Report"
+        android:layout_marginEnd="16dp" />
 
 
 </LinearLayout>

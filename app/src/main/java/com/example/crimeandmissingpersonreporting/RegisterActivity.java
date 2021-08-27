@@ -57,12 +57,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()){
             case R.id.logo_name:
                 startActivity(new Intent(this, HomeActivity.class));
+                finish();
                 break;
             case R.id.textViewLogin:
                 startActivity(new Intent(this, LoginActivity.class));
+                finish();
                 break;
             case R.id.buttonRegister:
                 createUser();
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
                 break;
         }
     }
@@ -134,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 }
                             });
                         }else {
-                            Toast.makeText(RegisterActivity.this, "Failed to register try again!!",Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterActivity.this, "Email is already taken!!",Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
 

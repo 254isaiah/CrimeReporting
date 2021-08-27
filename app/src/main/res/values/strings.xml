@@ -15,5 +15,6 @@
     <string name="residence">Age required.</string>
     <string name="contact">Contact required.</string>
     <string name="birthCert">Valid Birth Certificate number required.</string>
+    <string name="id">Enter valid ID Number.</string>
 
 </resources>

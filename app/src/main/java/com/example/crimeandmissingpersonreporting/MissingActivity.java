@@ -36,6 +36,7 @@ import com.google.firebase.storage.UploadTask;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.EventListener;
 
 import static com.basgeekball.awesomevalidation.ValidationStyle.BASIC;
 
@@ -45,10 +46,12 @@ public class MissingActivity extends AppCompatActivity {
     private ImageView imageView;
     private EditText nameEditText,ageEditText,genderEditText,descriptionEditText,residenceEditText,contactEditText,birthEditText;
 
-    private DatabaseReference root = FirebaseDatabase.getInstance().getReference("Missing");
+    private DatabaseReference root = FirebaseDatabase.getInstance().getReference("Report_Missing");
     private StorageReference reference = FirebaseStorage.getInstance().getReference("MissingPeople");
     private Uri imageUri;
     ProgressDialog mProgressDialog;
+    long maxid = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,7 @@ public class MissingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MissingActivity.this, showPeopleActivity.class));
+                finish();
 
             }
         });
@@ -138,55 +142,79 @@ public class MissingActivity extends AppCompatActivity {
     }
     private void uploadToFirebase(Uri uri) {
 
+        String birthCer = birthEditText.getText().toString().trim();
         StorageReference fileRef = reference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
 
-        fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        root.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    String name = nameEditText.getText().toString().trim();
-                    String birthCer = birthEditText.getText().toString().trim();
-                    String age = ageEditText.getText().toString().trim();
-                    String gender = genderEditText.getText().toString().trim();
-                    String description = descriptionEditText.getText().toString().trim();
-                    String residence = residenceEditText.getText().toString().trim();
-                    String contact = contactEditText.getText().toString().trim();
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists())
+                    maxid = (snapshot.getChildrenCount());
 
-                    DateFormat dateFormat=new SimpleDateFormat("yyyy/MM/dd");
-                    Date date = new Date();
-                    String stringdate= dateFormat.format(date);
+                for (DataSnapshot data : snapshot.getChildren()){
+                    if (data.getValue(PersonModal.class).getBirthCertNo().equals(birthCer)){
+                        Toast.makeText(MissingActivity.this, "Person already reported", Toast.LENGTH_SHORT).show();
+
+                    }else{
+                        fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    String name = nameEditText.getText().toString().trim();
+                                    String age = ageEditText.getText().toString().trim();
+                                    String gender = genderEditText.getText().toString().trim();
+                                    String description = descriptionEditText.getText().toString().trim();
+                                    String residence = residenceEditText.getText().toString().trim();
+                                    String contact = contactEditText.getText().toString().trim();
+
+                                    DateFormat dateFormat=new SimpleDateFormat("yyyy/MM/dd");
+                                    Date date = new Date();
+                                    String stringdate= dateFormat.format(date);
 
 
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        PersonModal personModal = new PersonModal(uri.toString(), name, age, gender, description, residence,contact,birthCer,stringdate);
-                        String modalId = root.push().getKey();
-                        root.child(modalId).setValue(personModal);
-                        mProgressDialog.dismiss();
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        PersonModal personModal = new PersonModal(uri.toString(), name, age, gender, description, residence,contact,birthCer,stringdate);
+                                        //String modalId = root.push().getKey();
+                                        //root.child(modalId).setValue(personModal);
+                                        root.child(String.valueOf(maxid+1)).setValue(personModal);
+                                        mProgressDialog.dismiss();
 
-                        Toast.makeText(MissingActivity.this, "Uploaded successfully", Toast.LENGTH_SHORT).show();
-                        imageView.setImageResource(R.drawable.images_placehold);
-                        startActivity(new Intent(MissingActivity.this, showPeopleActivity.class));
+                                        Toast.makeText(MissingActivity.this, "Uploaded successfully", Toast.LENGTH_SHORT).show();
+                                        imageView.setImageResource(R.drawable.images_placehold);
+                                        startActivity(new Intent(MissingActivity.this, showPeopleActivity.class));
+                                        finish();
+
+                                    }
+                                });
+
+                            }
+                        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                                mProgressDialog.setTitle("Uploading.....");
+                                mProgressDialog.show();
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                mProgressDialog.dismiss();
+                                Toast.makeText(MissingActivity.this, "Upload failed!!!!", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        });
 
                     }
-                });
-
+                }
             }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                mProgressDialog.setTitle("Uploading.....");
-                mProgressDialog.show();
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                mProgressDialog.dismiss();
-                Toast.makeText(MissingActivity.this, "Upload failed!!!!", Toast.LENGTH_SHORT).show();
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+
 
     }
     private String getFileExtension(Uri mUri){
