@@ -77,23 +77,27 @@
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp">
-
-                <EditText
-                    android:id="@+id/genderEditText"
-                    android:layout_width="match_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="150sp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:hint="Gender"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
+                    android:layout_marginTop="15dp"
+                    android:padding="5dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="15dp"
+                    android:text="Gender" />
+                <Spinner
+                    android:id="@+id/genderSpinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="80dp"
+                    app:backgroundTint="@color/cardview_dark_background"
+                    android:layout_marginEnd="16dp" />
+            </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -140,6 +144,29 @@
                     android:inputType="text|textMultiLine"
                     android:gravity="top"
                     android:hint="Complain"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="150sp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:padding="5dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:text="Crime" />
+                    <Spinner
+                        android:id="@+id/CrimeSpinner"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="15dp"
+                        app:backgroundTint="@color/cardview_dark_background"
+                        android:layout_marginRight="15dp" />
+                </LinearLayout>
             </com.google.android.material.textfield.TextInputLayout>
             <Button
                 android:id="@+id/button_choose_image"

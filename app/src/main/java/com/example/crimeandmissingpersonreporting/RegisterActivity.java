@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -21,12 +22,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
+import static com.basgeekball.awesomevalidation.ValidationStyle.BASIC;
+
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView textViewLogin,logo_name,bannerDescription;
     FirebaseAuth mAuth;
     private EditText fullname,editTextPhone,email,password;
     private ProgressBar progressBar;
     private Button buttonRegister;
+    //AwesomeValidation mAwesomeValidation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         buttonRegister = findViewById(R.id.buttonRegister);
         buttonRegister.setOnClickListener(this);
+/*
+        mAwesomeValidation = new AwesomeValidation(BASIC);
+        mAwesomeValidation.addValidation(this, R.id.fullname, "[-a-zA-Z.'\\s]+", R.string.name_required);
+        mAwesomeValidation.addValidation(this, R.id.email, android.util.Patterns.EMAIL_ADDRESS, R.string.email_required);
+        //String regexPassword = "(.*?)";//allow anything
+        mAwesomeValidation.addValidation(this, R.id.editTextPhone, "^[0-9]\\d{9}$", R.string.phone_required);
+        mAwesomeValidation.addValidation(this, R.id.password, "(.*?)" , R.string.pass_required);*/
     }
 
 
@@ -64,10 +75,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.buttonRegister:
-                createUser();
-                startActivity(new Intent(this, LoginActivity.class));
-                finish();
-                break;
+                    createUser();
+                    break;
+
+
         }
     }
 
@@ -87,11 +98,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             fullname.requestFocus();
             return;
         }
-        if (passwd.isEmpty()){
-            password.setError("Password is required");
-            password.requestFocus();
-            return;
-        }
         if (phone.isEmpty()){
             editTextPhone.setError("phone number is required");
             editTextPhone.requestFocus();
@@ -102,6 +108,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             email.requestFocus();
             return;
         }
+        if (passwd.isEmpty()){
+            password.setError("Password is required");
+            password.requestFocus();
+            return;
+        }
+
         if (!Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()){
             email.setError("Please provide a valid email");
             email.requestFocus();

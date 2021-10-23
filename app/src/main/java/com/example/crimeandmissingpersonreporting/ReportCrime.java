@@ -11,19 +11,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +43,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.content.ContentValues.TAG;
+import static android.widget.Toast.LENGTH_LONG;
 import static com.basgeekball.awesomevalidation.ValidationStyle.BASIC;
 
 public class ReportCrime extends AppCompatActivity {
@@ -46,21 +53,33 @@ public class ReportCrime extends AppCompatActivity {
     private EditText nameEditText,idEditText,ageEditText,genderEditText,complainEditText,residenceEditText,contactEditText;
     private Button button_choose_image,uploadBtn;
     private ImageView imageView;
-
+    Spinner genderSpinner,CrimeSpinner;
     private DatabaseReference root = FirebaseDatabase.getInstance().getReference("Report_Complain");
     private StorageReference reference = FirebaseStorage.getInstance().getReference("Report_Complain");
     private Uri imageUri;
     ProgressDialog mProgressDialog;
     AwesomeValidation mAwesomeValidation;
-    long maxid = 0;
+    private FirebaseAuth mAuth;
+
+    private DatabaseReference mDatabaseUser;
+    private String userID;
+    private FirebaseUser user;
+
+    //long maxid = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_crime);
 
+        mAuth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        mDatabaseUser = FirebaseDatabase.getInstance().getReference("Users");
+        userID = user.getUid();
+        //Log.d(TAG, "onCreate: "+userID);
+
         Toolbar toolbar = findViewById(R.id.toolbar1);
-        toolbar.setTitle("Report Complain");
+        toolbar.setTitle("Report Complaint");
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
 
@@ -72,7 +91,7 @@ public class ReportCrime extends AppCompatActivity {
 
         ageEditText = findViewById(R.id.ageEditText);
         idEditText = findViewById(R.id.idEditText);
-        genderEditText = findViewById(R.id.genderEditText);
+        //genderEditText = findViewById(R.id.genderEditText);
         residenceEditText = findViewById(R.id.residenceEditText);
         contactEditText = findViewById(R.id.contactEditText);
         complainEditText = findViewById(R.id.complainEditText);
@@ -80,10 +99,25 @@ public class ReportCrime extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
         uploadBtn = findViewById(R.id.reportBtn);
 
+        genderSpinner = (Spinner) findViewById(R.id.genderSpinner);//fetch the spinner from layout file
+        CrimeSpinner = (Spinner) findViewById(R.id.CrimeSpinner);
+
+        ArrayAdapter<String> genderadapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, getResources()
+                .getStringArray(R.array.gender));//setting the gender_array to spinner
+        genderadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genderSpinner.setAdapter(genderadapter);
+
+        ArrayAdapter<String> crimeadapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, getResources()
+                .getStringArray(R.array.crime));//setting the crime_array to spinner
+        crimeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        CrimeSpinner.setAdapter(crimeadapter);
+
         mAwesomeValidation = new AwesomeValidation(BASIC);
         mAwesomeValidation.addValidation(this, R.id.nameEditText, "[-a-zA-Z.'\\s]+", R.string.person_name);
         mAwesomeValidation.addValidation(this, R.id.idEditText, "^[0-9]\\d{7}$", R.string.id);
-        mAwesomeValidation.addValidation(this, R.id.ageEditText, "^[1-9]{1,2}$", R.string.person_age);
+        mAwesomeValidation.addValidation(this, R.id.ageEditText, "^100|[1-9]?\\d$", R.string.person_age);
         mAwesomeValidation.addValidation(this, R.id.residenceEditText, "[-a-zA-Z.'\\s]+", R.string.residence);
         mAwesomeValidation.addValidation(this, R.id.contactEditText, "^[0-9]\\d{9}$", R.string.contact);
 
@@ -114,8 +148,16 @@ public class ReportCrime extends AppCompatActivity {
                     NetworkState.ifNoInternetConnection(context);
                     return;
                 }
+                String gender = genderSpinner.getSelectedItem().toString();
+                String crime = CrimeSpinner.getSelectedItem().toString();
+                if ("Select Gender".equals(gender)){
+                    Toast.makeText(ReportCrime.this, "please select your gender", LENGTH_LONG).show();
+                }
+                else if ("Select Crime".equals(crime)){
+                    Toast.makeText(ReportCrime.this, "Type of crime required", LENGTH_LONG).show();
+                }
 
-                if (mAwesomeValidation.validate()) {
+                else if (mAwesomeValidation.validate()) {
                     if (imageUri != null) {
                         uploadToFirebase(imageUri);
 
@@ -139,21 +181,22 @@ public class ReportCrime extends AppCompatActivity {
 
         }
     }
+
     private void uploadToFirebase(Uri uri) {
 
         StorageReference fileRef = reference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
-        root.addListenerForSingleValueEvent(new ValueEventListener() {
+        /*root.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists())
-                    maxid = (snapshot.getChildrenCount());
+                    //maxid = (snapshot.getChildrenCount());
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
 
         fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -162,22 +205,31 @@ public class ReportCrime extends AppCompatActivity {
                     String name = nameEditText.getText().toString().trim();
                     String idNo = idEditText.getText().toString().trim();
                     String age = ageEditText.getText().toString().trim();
-                    String gender = genderEditText.getText().toString().trim();
+                    String gender = genderSpinner.getSelectedItem().toString().trim();
+                    String crime = CrimeSpinner.getSelectedItem().toString().trim();
                     String complain = complainEditText.getText().toString().trim();
                     String residence = residenceEditText.getText().toString().trim();
                     String contact = contactEditText.getText().toString().trim();
+
 
                     DateFormat dateFormat=new SimpleDateFormat("yyyy/MM/dd");
                     Date date = new Date();
                     String stringdate= dateFormat.format(date);
 
 
+
+
+
                     @Override
                     public void onSuccess(Uri uri) {
-                        ComplainModel complainModel = new ComplainModel(uri.toString(), name, age, gender, complain, residence,contact,idNo,stringdate);
-                        //String modalId = root.push().getKey();
-                        //root.child(modalId).setValue(complainModel);
-                        root.child(String.valueOf(maxid+1)).setValue(complainModel);
+                        ComplainModel complainModel = new ComplainModel(uri.toString(), name, age, gender, crime, complain, residence,contact,idNo,stringdate, userID);
+                        //String userID = mDatabaseUser.push().getKey();
+                       // mDatabaseUser.child(userID).setValue(complainModel);
+                        String modalId = root.push().getKey();
+                        root.child(modalId).setValue(complainModel);
+
+
+                        //root.child(String.valueOf(maxid+1)).setValue(complainModel);
                         mProgressDialog.dismiss();
 
                         Toast.makeText(ReportCrime.this, "Sent successfully", Toast.LENGTH_SHORT).show();

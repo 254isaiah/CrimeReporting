@@ -42,6 +42,7 @@ public class showPeopleActivity extends AppCompatActivity {
 
     private DatabaseReference root = FirebaseDatabase.getInstance().getReference("Report_Missing");
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +59,7 @@ public class showPeopleActivity extends AppCompatActivity {
         stripTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(showPeopleActivity.this, MissingActivity.class));
+                startActivity(new Intent(showPeopleActivity.this, LoginActivity.class));
                 finish();
             }
         });
@@ -88,6 +89,7 @@ public class showPeopleActivity extends AppCompatActivity {
         if (user == null) {
             // User is signed in
             stripTextView.setVisibility(View.VISIBLE);
+
 
         }
 
@@ -169,9 +171,11 @@ public class showPeopleActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

@@ -9,6 +9,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,6 +52,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
         holder.descriptionTextView.setText("Description: "+mList.get(position).getDescription());
         holder.residenceTextView.setText("Residence: "+mList.get(position).getResidence());
         holder.contactTextView.setText("Contact: "+mList.get(position).getContact());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Clickeddddddddddddd", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -99,6 +107,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> impl
 
         }
     };
+
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
 

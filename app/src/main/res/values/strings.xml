@@ -12,9 +12,29 @@
     <string name="close">\Close</string>
     <string name="person_name">Name required.</string>
     <string name="person_age">Age required.</string>
-    <string name="residence">Age required.</string>
+    <string name="residence">Residence required.</string>
     <string name="contact">Contact required.</string>
     <string name="birthCert">Valid Birth Certificate number required.</string>
     <string name="id">Enter valid ID Number.</string>
+    <string name="name_required">Full name is required</string>
+    <string name="pass_required">Password is required</string>
+    <string name="phone_required">Phone number is required</string>
+    <string name="email_required">Email is required</string>
+    <string name="email_error">Please provide a valid email</string>
+    <string name="pass_lengt">Password required</string>
+    <string-array name="gender">
+        <item>Select Gender</item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string-array name="crime">
+        <item>Select Crime</item>
+        <item>Arson</item>
+        <item>Theft</item>
+        <item>Fraud</item>
+        <item>Rape</item>
+        <item>Child abuse</item>
+        <item>Other</item>
+    </string-array>
 
 </resources>

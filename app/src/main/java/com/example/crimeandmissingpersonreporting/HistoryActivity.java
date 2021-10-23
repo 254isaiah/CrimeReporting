@@ -8,23 +8,35 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 public class HistoryActivity extends AppCompatActivity {
     private RecyclerView recycler_view;
     private ArrayList<ComplainModel> list;
     private ComplainAdapter adapter;
+    private FirebaseAuth mAuth;
     private DatabaseReference root = FirebaseDatabase.getInstance().getReference("Report_Complain");
+    private DatabaseReference mDatabaseCurrentUser;
+    private Query mQueryCurrentUser;
+    private DatabaseReference mDatabaseUser;
+    //private String userID;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +44,23 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
 
         Toolbar toolbar = findViewById(R.id.toolbar1);
-        toolbar.setTitle("Reported Complains");
+        toolbar.setTitle("Reported Complaints");
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mAuth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        mDatabaseUser = FirebaseDatabase.getInstance().getReference("Users");
+        //userID = user.getUid();
+
+        String userID = mAuth.getCurrentUser().getUid();
+        //Log.d(TAG, "onCreate: "+currentUserId);
+        mDatabaseCurrentUser = FirebaseDatabase.getInstance().getReference().child("Report_Complain");
+        mQueryCurrentUser = mDatabaseCurrentUser.orderByChild("userID").equalTo(userID);
+        //Log.d(TAG, "onCreate: "+userID);
+        Log.d(TAG, "onCreate: "+mQueryCurrentUser);
         recycler_view = findViewById(R.id.recycler_view);
         recycler_view.setHasFixedSize(true);
         recycler_view.setLayoutManager(new LinearLayoutManager(this));
@@ -49,7 +72,7 @@ public class HistoryActivity extends AppCompatActivity {
             return;
         }
 
-        root.addValueEventListener(new ValueEventListener() {
+        mQueryCurrentUser.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -14,9 +14,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
@@ -38,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.EventListener;
 
+import static android.widget.Toast.LENGTH_LONG;
 import static com.basgeekball.awesomevalidation.ValidationStyle.BASIC;
 
 public class MissingActivity extends AppCompatActivity {
@@ -45,12 +48,12 @@ public class MissingActivity extends AppCompatActivity {
     private Button uploadBtn, showAllBtn;
     private ImageView imageView;
     private EditText nameEditText,ageEditText,genderEditText,descriptionEditText,residenceEditText,contactEditText,birthEditText;
-
+    Spinner genderSpinner;
     private DatabaseReference root = FirebaseDatabase.getInstance().getReference("Report_Missing");
     private StorageReference reference = FirebaseStorage.getInstance().getReference("MissingPeople");
     private Uri imageUri;
     ProgressDialog mProgressDialog;
-    long maxid = 0;
+    //long maxid = 0;
 
 
     @Override
@@ -79,11 +82,17 @@ public class MissingActivity extends AppCompatActivity {
         residenceEditText = findViewById(R.id.residenceEditText);
         contactEditText = findViewById(R.id.contactEditText);
 
+        genderSpinner = (Spinner) findViewById(R.id.genderSpinner);//fetch the spinner from layout file
+        ArrayAdapter<String> genderadapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, getResources()
+                .getStringArray(R.array.gender));//setting the gender_array to spinner
+        genderadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        genderSpinner.setAdapter(genderadapter);
 
         personValidation = new AwesomeValidation(BASIC);
         personValidation.addValidation(this, R.id.nameEditText, "[-a-zA-Z.'\\s]+", R.string.person_name);
         personValidation.addValidation(this, R.id.birthEditText, "^[0-9]\\d{11}$", R.string.birthCert);
-        personValidation.addValidation(this, R.id.ageEditText, "^[1-9]{1,2}$", R.string.person_age);
+        personValidation.addValidation(this, R.id.ageEditText, "^100|[1-9]?\\d$", R.string.person_age);
         personValidation.addValidation(this, R.id.residenceEditText, "[-a-zA-Z.'\\s]+", R.string.residence);
         personValidation.addValidation(this, R.id.contactEditText, "^[0-9]\\d{9}$", R.string.contact);
 
@@ -114,8 +123,12 @@ public class MissingActivity extends AppCompatActivity {
                     NetworkState.ifNoInternetConnection(context);
                     return;
                 }
+                String gender = genderSpinner.getSelectedItem().toString();
+                if ("Select Gender".equals(gender)){
+                    Toast.makeText(MissingActivity.this, "please select your gender", LENGTH_LONG).show();
+                }
 
-                if (personValidation.validate()) {
+                else if (personValidation.validate()) {
                     if (imageUri != null) {
                         uploadToFirebase(imageUri);
 
@@ -142,53 +155,43 @@ public class MissingActivity extends AppCompatActivity {
     }
     private void uploadToFirebase(Uri uri) {
 
-        String birthCer = birthEditText.getText().toString().trim();
+
         StorageReference fileRef = reference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
-
-        root.addListenerForSingleValueEvent(new ValueEventListener() {
+        fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists())
-                    maxid = (snapshot.getChildrenCount());
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+            {
+                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    String name = nameEditText.getText().toString().trim();
+                    String age = ageEditText.getText().toString().trim();
+                    String gender = genderSpinner.getSelectedItem().toString().trim();
+                    String birthCer = birthEditText.getText().toString().trim();
+                    String description = descriptionEditText.getText().toString().trim();
+                    String residence = residenceEditText.getText().toString().trim();
+                    String contact = contactEditText.getText().toString().trim();
 
-                for (DataSnapshot data : snapshot.getChildren()){
-                    if (data.getValue(PersonModal.class).getBirthCertNo().equals(birthCer)){
-                        Toast.makeText(MissingActivity.this, "Person already reported", Toast.LENGTH_SHORT).show();
-
-                    }else{
-                        fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    String name = nameEditText.getText().toString().trim();
-                                    String age = ageEditText.getText().toString().trim();
-                                    String gender = genderEditText.getText().toString().trim();
-                                    String description = descriptionEditText.getText().toString().trim();
-                                    String residence = residenceEditText.getText().toString().trim();
-                                    String contact = contactEditText.getText().toString().trim();
-
-                                    DateFormat dateFormat=new SimpleDateFormat("yyyy/MM/dd");
-                                    Date date = new Date();
-                                    String stringdate= dateFormat.format(date);
+                    DateFormat dateFormat=new SimpleDateFormat("yyyy/MM/dd");
+                    Date date = new Date();
+                    String stringdate= dateFormat.format(date);
 
 
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        PersonModal personModal = new PersonModal(uri.toString(), name, age, gender, description, residence,contact,birthCer,stringdate);
-                                        //String modalId = root.push().getKey();
-                                        //root.child(modalId).setValue(personModal);
-                                        root.child(String.valueOf(maxid+1)).setValue(personModal);
-                                        mProgressDialog.dismiss();
+                    @Override
+                    public void onSuccess(Uri uri)
+                    {
+                        PersonModal personModal = new PersonModal(uri.toString(), name, age, gender, description, residence,contact,birthCer,stringdate);
+                        String modalId = root.push().getKey();
+                        root.child(modalId).setValue(personModal);
+                        //root.child(String.valueOf(maxid+1)).setValue(personModal);
+                        mProgressDialog.dismiss();
 
-                                        Toast.makeText(MissingActivity.this, "Uploaded successfully", Toast.LENGTH_SHORT).show();
-                                        imageView.setImageResource(R.drawable.images_placehold);
-                                        startActivity(new Intent(MissingActivity.this, showPeopleActivity.class));
-                                        finish();
+                        Toast.makeText(MissingActivity.this, "Uploaded successfully", Toast.LENGTH_SHORT).show();
+                        imageView.setImageResource(R.drawable.images_placehold);
+                        startActivity(new Intent(MissingActivity.this, showPeopleActivity.class));
+                        finish();
+                    }
+                    });
 
-                                    }
-                                });
-
-                            }
+            }
                         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
@@ -205,15 +208,6 @@ public class MissingActivity extends AppCompatActivity {
                             }
                         });
 
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
 
 
     }
