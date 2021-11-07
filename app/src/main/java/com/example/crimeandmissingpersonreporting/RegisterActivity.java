@@ -3,7 +3,9 @@ package com.example.crimeandmissingpersonreporting;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -140,8 +142,27 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
-                                        Toast.makeText(RegisterActivity.this, "User has been registered successfully",Toast.LENGTH_LONG).show();
                                         progressBar.setVisibility(View.GONE);
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+                                        builder.setTitle("Registration Successful")
+                                                .setMessage("You can now proceed to login, and enjoy our awesome content!");
+                                        builder.setCancelable(false);
+
+                                        builder.setPositiveButton(
+                                                "Ok",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+
+                                                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                                                        finish();
+
+                                                    }
+                                                });
+
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                        //Toast.makeText(RegisterActivity.this, "User has been registered successfully",Toast.LENGTH_LONG).show();
+                                        //progressBar.setVisibility(View.GONE);
                                         //redirect to login layout
                                     }else {
                                         Toast.makeText(RegisterActivity.this, "Failed to register try again!!",Toast.LENGTH_LONG).show();
